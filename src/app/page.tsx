@@ -1,3 +1,4 @@
+import { Footer } from "@/components/ui/footer";
 import { Header } from "@/components/ui/header";
 import { Hero } from "@/components/ui/hero";
 import Image from "next/image";
@@ -7,6 +8,7 @@ export default function Home() {
     <main className="">
       <Header />
       <Hero />
+      <Footer />
     </main>
   );
 }
