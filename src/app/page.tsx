@@ -84,7 +84,7 @@ export default function Home() {
       <Header {...otherContent} />
       <Hero {...hero} />
       <About {...about} />
-      <Work {...work} />
+      { work && <Work {...work} /> }
       <Service {...service} />
       <Testimonial {...testimonial} />
       <Footer {...menu} {...otherContent} />

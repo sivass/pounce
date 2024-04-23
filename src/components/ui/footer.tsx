@@ -1,11 +1,35 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRef, useState } from "react";
 
 export const Footer = (menu: any) => {
-  const menuValue =  Object.keys(menu).map(key => {
-    return {key: key, value: menu[key]}
- });
+  const inputRef = useRef<HTMLInputElement>(null);
+  const menuValue = Object.keys(menu).map((key) => {
+    return { key: key, value: menu[key] };
+  });
+  const [message, setMessage]: any = useState("");
+  const subscribeUser = async (e: any) => {
+    e.preventDefault();
+    const res = await fetch("/api/subscribeUser", {
+      body: JSON.stringify({
+        email: inputRef.current?.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+    const resData = await res.json();
+    if (resData.status) {
+      //console.log(resData.message);
+      inputRef.current?.value;
+      setMessage(resData);
+    } else {
+      //console.log(resData.message);
+      setMessage(resData);
+    }
+  };
   return (
     <div className="w-full h-full dark bg-gray-950 text-white">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center py-28">
@@ -26,7 +50,11 @@ export const Footer = (menu: any) => {
             <ul className="text-left text-gray-400">
               {menuValue &&
                 menuValue.map((item) => {
-                  return <li key={item.key} className=" capitalize">{item.value.title}</li>;
+                  return (
+                    <li key={item.key} className=" capitalize">
+                      {item.value.title}
+                    </li>
+                  );
                 })}
               {/* <li>Services</li>
               <li>About us</li>
@@ -81,18 +109,33 @@ export const Footer = (menu: any) => {
               <p className="text-left text-sm font-normal text-gray-400">
                 {menu.description}
               </p>
-              <div className="flex gap-2 py-6">
-                <div className="">
-                  <input
-                    className=" border border-gray-400 h-fit px-2 py-2 bg-black"
-                    type="email"
-                    placeholder="Email"
-                  />
+              <form onSubmit={subscribeUser}>
+                <div className="flex gap-2 py-6">
+                  <div className="">
+                    <input
+                      className=" border border-gray-400 h-fit px-2 py-2 bg-black"
+                      type="email"
+                      placeholder="Email"
+                      ref={inputRef}
+                      required
+                    />
+                  </div>
+                  <div className="">
+                    <Button>GET AMONGST IT</Button>
+                  </div>
                 </div>
-                <div className="">
-                  <Button>GET AMONGST IT</Button>
-                </div>
-              </div>
+                {message && (
+                  <div className="flex">
+                    <p
+                      className={
+                        message.status ? "text-green-500" : " text-red-500"
+                      }
+                    >
+                      {message.message}
+                    </p>
+                  </div>
+                )}
+              </form>
             </div>
           </div>
         </div>
